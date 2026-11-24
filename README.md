@@ -10,11 +10,11 @@ Mini-ORM **próprio** em PHP 8.2+, PDO e MySQL 8, sem Laravel, Doctrine ou outro
 
 - PHP 8.2 ou superior com extensão `pdo_mysql`
 - MySQL 8 com tabelas InnoDB
-- Windows com PowerShell ou outro terminal PHP
+- Windows com PowerShell (já incluído no Windows 10/11) para usar o iniciador; ou um terminal com PHP para execução manual
 
 ## Como executar
 
-No Windows, abra **`INICIAR_BIBLIOTECAORM.cmd`**. Digite o usuário e a senha do MySQL somente no seu computador. O iniciador:
+No Windows, abra **`INICIAR_BIBLIOTECAORM.cmd`** com dois cliques. Ele é o **único arquivo de inicialização**: contém os comandos PowerShell necessários internamente, sem depender de um arquivo `.ps1` separado. Digite o usuário e a senha do MySQL somente no seu computador. O iniciador:
 
 1. Prepara os bancos `biblioteca_orm` e `biblioteca_orm_teste`.
 2. Roda **5 testes de domínio** (não requerem banco).
@@ -37,7 +37,7 @@ $env:DB_NAME='biblioteca_orm'
 php demo.php
 ```
 
-Caso o PHP não carregue `pdo_mysql` por padrão, o iniciador Windows procura a extensão na pasta `ext` do PHP instalado.
+Caso o PHP não carregue `pdo_mysql` por padrão, o iniciador Windows tenta carregar a extensão da pasta `ext` do PHP instalado. A conta MySQL precisa ter permissão para criar os bancos e tabelas na primeira execução.
 
 ## Arquitetura
 

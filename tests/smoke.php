@@ -35,7 +35,7 @@ function caso(string $descricao, callable $teste): void
     echo '[OK] ' . $descricao . "\n";
 }
 
-function exigirFalhaDeFK(callable $acao): void
+function exigirErroDeIntegridade(callable $acao): void
 {
     try {
         $acao();
@@ -105,11 +105,11 @@ try {
         });
 
         caso('7. PK composta rejeita vínculo repetido', static function () use ($livros, $livro, $autor1): void {
-            exigirFalhaDeFK(static fn() => $livros->associarAutor($livro->id(), $autor1->id()));
+            exigirErroDeIntegridade(static fn() => $livros->associarAutor($livro->id(), $autor1->id()));
         });
 
         caso('8. FK impede excluir autor vinculado', static function () use ($autores, $autor1): void {
-            exigirFalhaDeFK(static fn() => $autores->excluir($autor1->id()));
+            exigirErroDeIntegridade(static fn() => $autores->excluir($autor1->id()));
         });
 
         caso('9. Validação de título vazio', static function (): void {
@@ -155,10 +155,10 @@ try {
             $livros->associarAutor($novo->id(), 2147483647);
             throw new RuntimeException('A FK não rejeitou autor inexistente.');
         } catch (PDOException $e) {
-            verificar((string) $e->getCode() === '23000', 'Esperada falha de integridade.');
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
+            verificar((string) $e->getCode() === '23000', 'Esperada falha de integridade.');
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
