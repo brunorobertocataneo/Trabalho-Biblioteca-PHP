@@ -13,6 +13,6 @@
 | R9 — Segurança e rollback | PDO, FK, transações e `demo.php` | Implementado; confirmar no MySQL |
 | R10 — Organização e testes | `README`, `sql/`, `tests/` | Implementado |
 | Evidências 1 a 7 | `demo.php` | Gerar log de execução real |
-| UML e relatório | `diagramas/`; PDF para anexar no portal | Diagrama incluído; PDF externo ao GitHub |
+| UML e relatório | `diagramas/`; PDF para anexar no portal | Diagrama incluído; PDF revisado na pasta `relatorio/` |
 
 **Nota:** não afirmar que os 13 testes integrados passaram sem registrar execução autenticada no MySQL.

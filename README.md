@@ -139,7 +139,7 @@ classDiagram
 
 ## Relatório e entrega
 
-O professor exige, **além do link do repositório**, um relatório técnico de 2 a 4 páginas em PDF com UML, decisões, evidências e limitações. O arquivo `Relatorio_Tecnico_BibliotecaORM_Aula11.pdf` foi preparado separadamente e deve ser anexado no portal junto com o link do GitHub. Não confunda o diagrama do README com a entrega obrigatória do relatório em PDF.
+O professor exige, **além do link do repositório**, um relatório técnico de 2 a 4 páginas em PDF com UML, decisões, evidências e limitações. O relatório revisado no padrão UNOESC, com quatro páginas e o diagrama de classes, está disponível em [`relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf`](relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf). Anexe esse PDF no portal junto com o link do GitHub.
 
 As limitações do mini-ORM incluem ausência de lazy loading, identity map, query builder, migrations, carregamento em lote e controle de concorrência. Uma execução repetida de `demo.php` insere novos exemplos no banco principal.
 
