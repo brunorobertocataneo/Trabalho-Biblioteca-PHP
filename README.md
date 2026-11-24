@@ -1,96 +1,67 @@
-# BibliotecaORM — Avaliação Prática de Programação II
+# BibliotecaORM
 
-**UNOESC | Ciência da Computação | Professor: Leandro Otavio Cordova Vieira**
+Trabalho desenvolvido para a disciplina de Programação II, do curso de Ciência da Computação da UNOESC Videira.
 
-Mini-ORM **próprio** em PHP 8.2+, PDO e MySQL 8, sem Laravel, Doctrine ou outros ORMs. O projeto usa o padrão **Data Mapper**, com entidades separadas do SQL, repositórios especializados e um repositório abstrato para operações CRUD.
+Professor: Leandro Otavio Cordova Vieira.
 
-> A atividade avalia a camada de persistência e não exige interface web. Execute a demonstração pelo terminal.
+## Sobre o projeto
 
-## Requisitos
+O BibliotecaORM é um projeto em PHP que faz o cadastro e a consulta de livros e autores usando MySQL. A ideia da atividade foi criar um mini-ORM próprio, sem utilizar frameworks prontos.
 
-- PHP 8.2 ou superior com extensão `pdo_mysql`
-- MySQL 8 com tabelas InnoDB
-- Windows com PowerShell (já incluído no Windows 10/11) para usar o iniciador; ou um terminal com PHP para execução manual
+Separei as classes dos livros e autores das classes que fazem as operações no banco. Assim, os repositórios ficam responsáveis por salvar, buscar, listar, atualizar e excluir os registros.
+
+O projeto também trabalha com um livro que pode ter vários autores, além de usar interface, herança, polimorfismo e transações com PDO.
+
+Não fiz uma tela para navegador porque a atividade é voltada ao funcionamento do ORM. A demonstração é feita pelo terminal.
+
+## O que precisa para executar
+
+- PHP 8.2 ou superior, com a extensão `pdo_mysql`;
+- MySQL 8 instalado e iniciado;
+- No Windows, PowerShell para utilizar o arquivo de inicialização.
 
 ## Como executar
 
-No Windows, abra **`INICIAR_BIBLIOTECAORM.cmd`** com dois cliques. Ele é o **único arquivo de inicialização**: contém os comandos PowerShell necessários internamente, sem depender de um arquivo `.ps1` separado. Digite o usuário e a senha do MySQL somente no seu computador. O iniciador:
+1. Baixe o projeto e extraia os arquivos.
+2. Confira se o PHP e o MySQL estão instalados.
+3. Abra o arquivo `INICIAR_BIBLIOTECAORM.cmd` com dois cliques.
+4. Informe o usuário e a senha do MySQL na janela que abrir.
 
-1. Prepara os bancos `biblioteca_orm` e `biblioteca_orm_teste`.
-2. Roda **5 testes de domínio** (não requerem banco).
-3. Roda **13 testes de integração** usando banco isolado.
-4. Executa as **7 evidências práticas** em `demo.php`.
-5. Guarda a saída real em `evidencias/execucao-AAAAMMDD-HHMMSS.txt`.
+O usuário precisa ter permissão para criar os bancos e as tabelas na primeira execução. A senha é solicitada no próprio computador e não fica salva no projeto.
 
-**Não há log aprovado dos testes MySQL neste repositório**: para comprovar as integrações, é preciso executá-las em um MySQL autenticado e revisar a saída. A demonstração cria exemplos no banco principal; os testes de integração usam transações e rollback no banco separado.
+O arquivo de inicialização prepara os bancos `biblioteca_orm` e `biblioteca_orm_teste`, executa os testes e depois roda o `demo.php`, mostrando as operações do sistema. A saída fica registrada na pasta `evidencias` após a execução.
 
-### Execução manual
-
-Configure as variáveis de ambiente `DB_HOST`, `DB_USER`, `DB_PASS` e `DB_NAME` em sua sessão do terminal, sem salvar senhas no Git.
+Se preferir usar o terminal manualmente, primeiro configure `DB_HOST`, `DB_USER`, `DB_PASS` e `DB_NAME` no ambiente. Depois, execute os arquivos nesta ordem:
 
 ```powershell
 php preparar_bancos.php
 php tests/domain.php
-$env:DB_NAME='biblioteca_orm_teste'
+$env:DB_NAME = 'biblioteca_orm_teste'
 php tests/smoke.php
-$env:DB_NAME='biblioteca_orm'
+$env:DB_NAME = 'biblioteca_orm'
 php demo.php
 ```
 
-Caso o PHP não carregue `pdo_mysql` por padrão, o iniciador Windows tenta carregar a extensão da pasta `ext` do PHP instalado. A conta MySQL precisa ter permissão para criar os bancos e tabelas na primeira execução.
+## Organização dos arquivos
 
-## Arquitetura
+- `src/Domain`: classes `Livro` e `Autor`, com os dados e validações.
+- `src/Infrastructure`: conexão com o banco, interface e repositórios.
+- `src/Application`: exemplo de consulta usando polimorfismo.
+- `sql`: scripts de criação dos bancos.
+- `tests`: testes das classes e das operações com MySQL.
+- `demo.php`: demonstra cadastro, consulta, listagem, atualização, associação de autores, exclusão e rollback.
+- `autoload.php`: carrega as classes do projeto.
 
-```text
-src/
-  Domain/
-    Livro.php
-    Autor.php
-  Infrastructure/
-    RepositoryInterface.php
-    AbstractRepository.php
-    LivroRepository.php
-    AutorRepository.php
-    Conexao.php
-  Application/
-    ConsultaPolimorfica.php
-sql/
-  schema.sql
-  schema_teste.sql
-tests/
-  domain.php
-  smoke.php
-```
+## Testes
 
-- **Encapsulamento:** `Livro` e `Autor` têm atributos privados e validam nome, título e identidade.
-- **Herança/abstração:** `AbstractRepository` centraliza `buscar`, `listar`, `salvar`, `excluir`; as subclasses informam mapeamento e hidratação.
-- **Interface/polimorfismo:** `ConsultaPolimorfica::buscar(RepositoryInterface, int)` aceita os dois repositórios.
-- **CRUD/hidratação:** `PDO` mapeia objetos para linhas e vice-versa, preservando IDs e tipos.
-- **N:N:** a tabela `livros_autores` conecta dois ou mais autores a um livro; a coleção é recuperada em `buscarComAutores()`.
-- **Segurança:** prepared statements, nomes de tabelas e colunas conhecidos pelo código, PKs/FKs e `rollBack()` em falhas.
+O projeto possui 5 testes das classes e 13 testes de integração com MySQL. Os testes das classes já foram executados com sucesso. Os de integração ainda precisam ter a execução confirmada em um MySQL configurado; o código dos testes estar pronto não significa que eles passaram.
 
-## Evidências exigidas
+O arquivo `demo.php` também mostra o que acontece quando tentamos relacionar um livro com um autor inexistente. Nesse caso, a chave estrangeira impede a operação e a transação é desfeita.
 
-| Nº | Requisito | Onde demonstrar |
-|---|---|---|
-| 1 | INSERT de Livro e dois Autores, com IDs do MySQL | `demo.php` — [1] |
-| 2 | SELECT por ID e hidratação | `demo.php` — [2/4] |
-| 3 | UPDATE e nova consulta | `demo.php` — [3] |
-| 4 | Dois autores no mesmo Livro, sem duplicação | `demo.php` — [2/4] |
-| 5 | Polimorfismo com `RepositoryInterface` | `demo.php` — [5] |
-| 6 | Erro de FK e rollback | `demo.php` — [6] |
-| 7 | DELETE e restrição referencial | `demo.php` — [7] |
+## Relatório e diagrama
 
-A listagem `listar()` também é demonstrada no mesmo programa e exercitada nos testes.
+O [relatório técnico em PDF](relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf) contém a explicação do desenvolvimento, o diagrama de classes, os testes e as limitações do projeto.
 
-## Diagrama de classes
+O [diagrama editável](diagramas/diagrama_classes.drawio) pode ser aberto no diagrams.net.
 
-O diagrama UML está incluído no [relatório técnico em PDF](relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf). O [arquivo editável](diagramas/diagrama_classes.drawio) permite abrir o desenho no diagrams.net, se necessário.
-
-## Relatório e entrega
-
-O professor exige, **além do link do repositório**, um relatório técnico de 2 a 4 páginas em PDF com UML, decisões, evidências e limitações. O relatório revisado no padrão UNOESC, com quatro páginas e o diagrama de classes, está disponível em [`relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf`](relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf). Anexe esse PDF no portal junto com o link do GitHub.
-
-As limitações do mini-ORM incluem ausência de lazy loading, identity map, query builder, migrations, carregamento em lote e controle de concorrência. Uma execução repetida de `demo.php` insere novos exemplos no banco principal.
-
-Projeto acadêmico individual: é necessário compreender e saber explicar o funcionamento, não apenas entregar os arquivos. Não publique senhas reais nem dados pessoais de terceiros.
+O projeto é uma implementação simples para estudo. Não possui todos os recursos de um ORM completo, mas permite demonstrar os conceitos pedidos na atividade.
