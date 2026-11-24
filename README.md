@@ -85,57 +85,7 @@ A listagem `listar()` também é demonstrada no mesmo programa e exercitada nos 
 
 ## Diagrama de classes
 
-Consulte [diagramas/diagrama_classes.mmd](diagramas/diagrama_classes.mmd), renderizado também abaixo:
-
-```mermaid
-classDiagram
-    class RepositoryInterface {
-        <<interface>>
-        +buscar(int) object
-        +listar() array
-        +salvar(object) void
-        +excluir(int) void
-    }
-    class AbstractRepository {
-        <<abstract>>
-        #PDO pdo
-        +buscar(int) object
-        +listar() array
-        +salvar(object) void
-        +excluir(int) void
-        #tabela() string
-        #colunas() array
-        #hidratar(array) object
-    }
-    class LivroRepository {
-        +autoresDoLivro(int) array
-        +buscarComAutores(int) Livro
-        +associarAutor(int,int) void
-    }
-    class AutorRepository
-    class Livro {
-        -int id
-        -string titulo
-        -Autor[] autores
-        +alterarTitulo(string) void
-        +adicionarAutor(Autor) void
-    }
-    class Autor {
-        -int id
-        -string nome
-        +nome() string
-    }
-    class ConsultaPolimorfica {
-        +buscar(RepositoryInterface,int) object
-    }
-    RepositoryInterface <|.. AbstractRepository
-    AbstractRepository <|-- LivroRepository
-    AbstractRepository <|-- AutorRepository
-    Livro "0..*" -- "0..*" Autor : livros_autores
-    ConsultaPolimorfica ..> RepositoryInterface
-    LivroRepository ..> Livro
-    AutorRepository ..> Autor
-```
+O diagrama UML está incluído no [relatório técnico em PDF](relatorio/Relatorio_Tecnico_BibliotecaORM_UNOESC.pdf). O [arquivo editável](diagramas/diagrama_classes.drawio) permite abrir o desenho no diagrams.net, se necessário.
 
 ## Relatório e entrega
 
