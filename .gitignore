@@ -1,0 +1,11 @@
+.env
+.env.local
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+__MACOSX/
+/evidencias/execucao-*.txt
+/evidencias/execucao-*.log
+/.tmp/
